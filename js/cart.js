@@ -24,8 +24,30 @@ function clearCart() { }
 // TODO: Fill in the <tr>'s under the <tbody> for each item in the cart
 let clear = document.getElementsByTagName( 'tbody' )[0];
 clear.innerHTML = '';
-function showCart() {
 
+
+function showCart() {
+  for ( let i = 0; i < cart.items.length; i++ ) {
+    let tr = document.createElement( 'tr' );
+    let deleteLink = document.createElement( 'a' );
+    let quantity = document.createElement( 'td' );
+    let itemElement = document.createElement( 'td' );
+    let deletedLink = document.createElement( 'td' );
+    // delete link is just an "x" with an anchor tag around it
+    // quanitity comes from this.quantity = quantity;
+    // item comes from this.name = name;
+    deleteLink.textContent = 'X';
+    deleteLink.setAttribute( 'href', '#' );
+    deleteLink.setAttribute( 'abbr', cart.items[i].product );
+    quantity.textContent = cart.items[i].quantity;
+    itemElement.textContent = cart.items[i].product;
+    deletedLink.appendChild( deleteLink );
+    tr.appendChild( deletedLink );
+    tr.appendChild( quantity );
+    tr.appendChild( itemElement );
+    table.appendChild( tr );
+
+  }
   // TODO: Find the table body
 
   // TODO: Iterate over the items in the cart
@@ -35,29 +57,19 @@ function showCart() {
 
 }
 
-function removeItemFromCart(event) {
+function removeItemFromCart( event ) {
 
-  console.log( cart.items );
   for ( let i = 0; i < cart.items.length; i++ ) {
-    let tablerow = document.createElement( 'tr' );
-    tablerow.appendChild( deletedItem );
-    tablerow.appendChild( quantity );
-    tablerow.appendChild( itemElement );
+    console.log( event.target.abbr, cart.items[i].product );
+    let abbr = event.target.getAttribute( 'abbr' );
+    if ( abbr === cart.items[i].product ) {
+      cart.removeItem( i );
 
-    let removeItem = document.createElement( 'a' );
-    removeItem.textContent = 'Remove Item';
-    removeItem.setAttribute( 'href', '#' );
-    removeItem.setAttribute( 'abbr', cart.items[i].product );
-
-    let quantity = document.createElement( 'td' );
-    let itemElement = document.createElement( 'td' );
-    let deletedItem = document.createElement( 'td' );
-    deletedItem.appendChild( removeItem );
-
-    quantity.textContent = cart.items[i].product;
-    itemElement.textContent = cart.items[i].product;
-    tablebody.appendChild( tr );
+    }
+    cart.saveToLocalStorage();
+    renderCart();
   }
+
   // TODO: When a delete link is clicked, use cart.removeItem to remove the correct item
   // TODO: Save the cart back to local storage
   // TODO: Re-draw the cart table
